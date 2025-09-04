@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StellarOaisMC • Server Minecraft</title>
+  <meta name="description" content="Un sito moderno in singolo file per un server Minecraft. Include pulsante copia IP, sezioni informazioni, voti, rank e FAQ.">
+  <meta property="og:title" content="StellarOaisMC • Server Minecraft">
+  <meta property="og:description" content="Un sito moderno in singolo file per un server Minecraft.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'><rect width='100%' height='100%' fill='%2321375a'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='64' fill='white'>StellarOaisMC</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs/%3E%3Crect width='64' height='64' rx='12' ry='12' fill='%2321375a'/%3E%3Cpath d='M32 10l6 10h12l-10 7 4 12-12-8-12 8 4-12-10-7h12z' fill='%23ffb703'/%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: #101a2e;
+      --muted: #7f8da3;
+      --text: #e9eef7;
+      --brand: #4fd1c5; /* turchese */
+      --brand-2: #a78bfa; /* lilla */
+      --accent: #ffb703; /* corallo dorato */
+      --success: #34d399;
+      --danger: #ef4444;
+      --shadow: 0 20px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 80% -10%, rgba(79,209,197,.25), transparent 60%), radial-gradient(1000px 600px at -10% 10%, rgba(167,139,250,.18), transparent 50%), var(--bg); color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, 'Apple Color Emoji','Segoe UI Emoji'; line-height:1.5}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.6);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
+    nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.4px}
+    .brand-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:var(--shadow)}
+    .brand-logo span{font-weight:900}
+    .nav-links{display:flex;gap:18px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:10px;border:none;border-radius:14px;padding:12px 16px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b1220;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(79,209,197,.25), inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .12s ease, filter .12s ease}
+    .btn:hover{transform:translateY(-1px);filter:saturate(110%)}
+    .btn.secondary{background:#152540;color:var(--text);box-shadow:var(--shadow);font-weight:700}
+    .hero{padding:64px 0 34px}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:26px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .hero .card{padding:28px}
+    h1{font-size:44px;line-height:1.1;margin:12px 0 8px}
+    h2{font-size:28px;margin:0 0 16px}
+    p.lead{font-size:18px;color:var(--muted);margin:0 0 18px}
+    .pill{display:inline-flex;gap:8px;align-items:center;background:rgba(79,209,197,.12);border:1px solid rgba(79,209,197,.35);color:#b8fff7;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
+    .ip-row{display:flex;gap:10px;margin-top:14px}
+    input.ip{flex:1;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0e182c;color:var(--text);padding:12px 14px;font-size:16px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .stat{background:#0f1a2f;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;text-align:center}
+    .stat .num{font-size:22px;font-weight:900}
+    .stat .lbl{font-size:12px;color:var(--muted)}
+    .hero-art{min-height:280px;background: radial-gradient(600px 360px at 60% -40%, rgba(79,209,197,.25), transparent 60%), linear-gradient(160deg, #15233e, #0e1a33); border:1px dashed rgba(255,255,255,.08); display:grid; place-items:center; border-radius:var(--radius); position:relative; overflow:hidden}
+    .bubble{position:absolute; border-radius:50%; filter:blur(20px); opacity:.6; mix-blend-mode:screen}
+    .b1{width:160px;height:160px;background:#4fd1c5;top:20px;left:-30px}
+    .b2{width:220px;height:220px;background:#a78bfa;bottom:-40px;right:-30px}
+    .hero-art .title{font-size:18px;color:var(--muted)}
+    section{padding:36px 0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feature{padding:18px}
+    .feature h3{margin:8px 0 6px}
+    .muted{color:var(--muted)}
+    .section-title{display:flex;align-items:end;justify-content:space-between;margin-bottom:12px}
+    .list{display:grid;gap:10px}
+    .list .row{display:flex;justify-content:space-between;align-items:center;background:#0f1a2f;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px}
+    .faq{display:grid;gap:10px}
+    details{background:#0f1a2f;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px}
+    summary{cursor:pointer;font-weight:700}
+    footer{padding:28px 0 60px;color:var(--muted)}
+    .badges{display:flex;gap:10px;flex-wrap:wrap}
+    .badge{padding:8px 12px;border-radius:999px;background:#0f1a2f;border:1px solid rgba(255,255,255,.06);font-size:13px}
+    .center{text-align:center}
+    .rank{display:flex;gap:12px;align-items:center}
+    .rank .price{font-weight:900}
+    .rank .name{font-weight:800}
+    .ranks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .rank .badge{background:linear-gradient(135deg,rgba(255,183,3,.12),rgba(167,139,250,.12)); border-color:rgba(255,255,255,.14)}
+    .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .shot{aspect-ratio: 16/10; border-radius:14px; background: linear-gradient(120deg,#12213c,#101a2e); border: 1px solid rgba(255,255,255,.06); display:grid; place-items:center; color:var(--muted); font-size:14px}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+    @media (max-width: 900px){
+      .hero-grid{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:1fr}
+      .ranks{grid-template-columns:1fr}
+      .gallery{grid-template-columns:1fr 1fr}
+      header .nav-links{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="brand">
+          <div class="brand-logo"><span>🧱</span></div>
+          <div>StellarOaisMC</div>
+        </div>
+        <div class="nav-links">
+<div class="nav-links">
+  <a href="#join">Gioca</a>
+  <a href="#modalita">Modalità</a>
+  <a href="#vota">Vota</a>
+  <a href="#store">Store</a>
+  <a href="#faq">FAQ</a>
+  <a href="#candidature">Candidature</a>
+        </div>
+        <a class="btn" href="#join" aria-label="Unisciti ora">Unisciti ora</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-grid">
+        <div class="card">
+          <span class="pill">dsc.gg/stellaroasismc</span>
+          <h1>Il tuo server <span style="background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent">Minecraft</span> italiano</h1>
+          <p class="lead">Community attiva, eventi settimanali e prestazioni top. Entra ora e scala la classifica!</p>
+
+          <div class="ip-row" id="join">
+            <input class="ip mono" id="ip" value="stellaroasismc.hopto.org" aria-label="IP del server" readonly>
+            <button class="btn" id="copyBtn">Copia IP</button>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="onlineCount">--</div>
+              <div class="lbl">Giocatori online</div>
+            </div>
+            <div class="stat">
+              <div class="num">1.16.5 ➜ 1.21.8</div>
+              <div class="lbl">Versioni supportate</div>
+            </div>
+            <div class="stat">
+              <div class="num">AntiCheat+</div>
+              <div class="lbl">Sicurezza</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-art card" aria-hidden="true">
+          <div class="bubble b1"></div>
+          <div class="bubble b2"></div>
+          <div>
+            <div class="title">Anteprima Lobby</div>
+            <div style="font-size:64px;margin-top:6px">🏝️⛏️🛡️</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="modalita">
+      <div class="container">
+        <div class="section-title">
+          <h2>Modalità di gioco</h2>
+          <div class="badges">
+            <span class="badge">Lag-free</span>
+            <span class="badge">Eventi giornalieri</span>
+            <span class="badge">Supporto Discord</span>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card feature">
+            <div style="font-size:28px">⚔️</div>
+            <h3>PvP</h3>
+            <p class="muted">Nellla nostra Survival il PvP è ammesso!.</p>
+          </div>
+          <div class="card feature">
+            <div style="font-size:28px">🏝️</div>
+            <h3>Gioco</h3>
+            <p class="muted">Isola personalizzata, missioni settimanali e economia dinamica. Coop o sfida i tuoi amici.</p>
+          </div>
+          <div class="card feature">
+            <div style="font-size:28px">⚙️</div>
+            <h3>Meccanica</h3>
+            <p class="muted">Una Survival ma con meccaniche bellisime come il claim, aste e protezioni. Perfetto per chillare con la crew.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vota">
+      <div class="container">
+        <div class="section-title">
+          <h2>Vota</h2>
+          <a class="btn secondary" href="#" onclick="alert('https://minecraft-italia.net/lista/server/stellaroasismc⭐🌌 '); return false;">Vota ora</a>
+        </div>
+        <div class="list">
+          <div class="row"><span>✅ Aiutaci!</span><span class="muted">Ogni 24h</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="Store">
+  <div class="container">
+    <div class="section-title">
+      <h2>Store</h2>
+    </div>
+    <div class="ranks">
+
+      <!-- Rank 1 -->
+      <div class="Duck">
+        <div style="font-size:26px">🦆</div>
+        <div>
+          <div class="name">Duck</div>
+          <div class="muted">Accesso a /kit Duck e prefisso speciale</div>
+        </div>
+        <div class="price">€10</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+
+      <!-- Rank 2 -->
+      <div class="Moon">
+        <div style="font-size:26px">🌑</div>
+        <div>
+          <div class="name">Moon</div>
+          <div class="muted">Accesso a /kit Moon, prefisso speciale, /ec + vantaggi extra</div>
+        </div>
+        <div class="price">€20</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+      <!-- Rank 6 -->
+      <div class="Sun">
+        <div style="font-size:26px">☀️</div>
+        <div>
+          <div class="name">Sun</div>
+          <div class="muted">Accesso a /kit Sun, prefisso speciale, /ec + vantaggi extra</div>
+        </div>
+        <div class="price">€30</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+
+      <!-- Rank 3 -->
+      <div class="Kaos">
+        <div style="font-size:26px">🧿</div>
+        <div>
+          <div class="name">Kaos</div>
+          <div class="muted">Accesso a /kit Kaos, prefisso speciale, /ec, /fly + vantaggi extra</div>
+        </div>
+        <div class="price">€50</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+
+      <!-- Rank 4 -->
+      <div class="Storm">
+        <div style="font-size:26px">⛈️</div>
+        <div>
+          <div class="name">Storm</div>
+          <div class="muted">Accesso a /kit Kaos, prefisso speciale, /ec, /fly, /anvil + vantaggi extra</div>
+        </div>
+        <div class="price">€70</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+
+      <!-- Rank 5 -->
+      <div class="Black-Hole">
+        <div style="font-size:26px">🕳️</div>
+        <div>
+          <div class="name">Black-Hole</div>
+          <div class="muted">Accesso a /kit Black-Hole, prefisso speciale, /ec, /fly, /anvil e tutti i permessi VIP</div>
+        </div>
+        <div class="price">€100</div>
+        <a class="btn" href="Coming Soon" target="_blank">Acquista</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-title">
+          <h2>FAQ</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Come entro nel server?</summary>
+            <p>Apri Minecraft Java o Bedrock, clicca su Multigiocatore e aggiungi l'IP <span class="mono">stellaroasismc.join-game.net</span>. Versioni 1.16.5 → 1.21.8</p>
+          </details>
+          <details>
+            <summary>Posso giocare da telefono/console?</summary>
+            <p>Sì! Bedrock supportato (Android, iOS, Xbox, PlayStation, Switch). Collega il tuo account nel lobby per chat e rank.</p>
+          </details>
+          <details>
+            <summary>Come ottengo aiuto?</summary>
+            <p>Apri un ticket su Discord</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="candidature">
+  <div class="container">
+    <div class="section-title">
+      <h2>📋 Candidature Staff</h2>
+    </div>
+    <div class="grid-3">
+      <!-- Helper Supporter -->
+      <div class="card feature">
+        <h3>🧑‍💼 Helper Supporter</h3>
+        <p class="muted">Aiuta i nuovi giocatori, rispondi alle domande e supporta la community in chat. Cerchiamo persone pazienti e comunicative.</p>
+        <a class="btn" href="https://forms.gle/pxmQh8LViqNq8PK6A" target="_blank" rel="noopener noreferrer">Candidati come Helper Supporter</a>
+      </div>
+
+      <!-- Helper SS -->
+      <div class="card feature">
+        <h3>🧑‍💼 Helper SS</h3>
+        <p class="muted">Te sarai quello che pulisce il server dai hacker e cheater!.</p>
+        <a class="btn" href="https://forms.gle/cqGVmiU4SQcTiq5D9" target="_blank" rel="noopener noreferrer">Candidati come Helper SS</a>
+      </div>
+
+      <!-- Moderatore -->
+      <div class="card feature">
+        <h3>🛡️ Chat-Mod</h3>
+        <p class="muted">Gestisci la chat per non far flame e altre cose!</p>
+        <a class="btn" href="https://forms.gle/iiyFuVwi3FeR3mXP8" target="_blank" rel="noopener noreferrer">Candidati come Chat-Mod</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section>
+      <div class="container card" style="padding:18px">
+        <div class="center">
+          <h2 id="join2">Pronto a giocare?</h2>
+          <p class="muted">Copia l'IP qui sotto e ci vediamo in gioco!</p>
+          <div class="ip-row" style="justify-content:center; max-width:580px; margin: 0 auto">
+            <input class="ip mono" id="ip2" value="stellaroasismc.hopto.org" readonly>
+            <button class="btn" onclick="copyIP('ip2')">Copia IP</button>
+          </div>
+          <div style="margin-top:12px" class="muted mono">stellaroasismc.hopto.org • stellaroasismc.hopto.org:19132</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="badges" style="margin-bottom:10px">
+        <span class="badge">© <span id="year"></span> StellarOasisMC</span>
+        <span class="badge">Made by yuci</span>
+        <span class="badge">Contatti: dsc.gg/stellaroasismc</span>
+      </div>
+      <div class="muted">Sito realizzato in singolo file HTML</div>
+    </div>
+  </footer>
+
+  <script>
+    // Aggiorna anno
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copia IP
+    function copyIP(id) {
+      const el = document.getElementById(id);
+      el.select();
+      el.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(el.value).then(()=>{
+        toast('IP copiato: ' + el.value);
+      }).catch(()=>{
+        alert('Copia non riuscita, copia manualmente: ' + el.value);
+      });
+    }
+    document.getElementById('copyBtn').addEventListener('click', ()=>copyIP('ip'));
+
+    // Finto contatore online (sostituisci con API reali se vuoi)
+    function fakeOnline(){
+      const base = 120, swing = 35;
+      const v = base + Math.floor(Math.sin(Date.now()/200000)*swing) + Math.floor(Math.random()*10);
+      document.getElementById('onlineCount').textContent = v;
+    }
+    setInterval(fakeOnline, 3000); fakeOnline();
+
+    // Piccolo sistema toast
+    const toastBox = document.createElement('div');
+    toastBox.style.position='fixed'; toastBox.style.bottom='20px'; toastBox.style.left='50%';
+    toastBox.style.transform='translateX(-50%)'; toastBox.style.zIndex='50';
+    document.body.appendChild(toastBox);
+    function toast(msg){
+      const t = document.createElement('div');
+      t.textContent = msg;
+      t.style.background = 'linear-gradient(135deg,var(--brand),var(--brand-2))';
+      t.style.color = '#0b1220';
+      t.style.padding = '10px 14px';
+      t.style.marginTop = '8px';
+      t.style.borderRadius = '12px';
+      t.style.fontWeight = '800';
+      t.style.boxShadow = 'var(--shadow)';
+      t.style.transition = 'all .3s';
+      toastBox.appendChild(t);
+      setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(10px)'; }, 1800);
+      setTimeout(()=> t.remove(), 2300);
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id) || document.querySelector('[id="'+id+'"]');
+        if(target){
+          e.preventDefault();
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      });
+    });
+  </script>
+</body>
+</html>
